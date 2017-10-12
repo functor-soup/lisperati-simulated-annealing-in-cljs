@@ -1,6 +1,6 @@
 # lisperati-simulated-annealing-in-cljs
 
-FIXME: Write a one-line description of your library/project.
+Work in progress ... check back later
 
 ## Overview
 
