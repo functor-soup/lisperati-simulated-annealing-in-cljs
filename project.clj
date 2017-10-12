@@ -12,6 +12,7 @@
                  [quil "2.6.0"]]
 
   :plugins [[lein-figwheel "0.5.13"]
+            [lein-doo "0.1.7"]
             [lein-cljsbuild "1.1.7" :exclusions [[org.clojure/clojure]]]]
 
   :source-paths ["src"]
@@ -46,7 +47,15 @@
                 :compiler {:output-to "resources/public/js/compiled/lisperati_simulated_annealing_in_cljs.js"
                            :main lisperati-simulated-annealing-in-cljs.core
                            :optimizations :advanced
-                           :pretty-print false}}]}
+                           :pretty-print false}}
+               {:id "test"
+                :source-paths ["src" "tests"]
+                :compiler {:output-to "resources/public/js/compiled/tests.js"
+                           :main runners.runner
+                           :optimizations :none
+                           :pretty-print true
+                           :output-dir "resources/public/js/compiled/tests"
+                           }}]}
 
   :figwheel {;; :http-server-root "public" ;; default and assumes "resources"
              ;; :server-port 3449 ;; default
