@@ -9,6 +9,9 @@
                     :x2 (:x b) :y2 (:y b)})
          x x-with-head-at-end)))
 
+(defn line-color [line r g b]
+  (assoc line :color [r g b]))
+
 ;; Polygon -> [Polygon]
 ;; todo- make this non recursive
 (defn triangulate [polygon]
@@ -64,4 +67,4 @@
 
 (defn slice-y [num triangle-list]
   (slice (comp (partial < num) (partial :y))
-         interpolate-x-via-y triangle-list))
+         (partial interpolate-x-via-y) triangle-list))

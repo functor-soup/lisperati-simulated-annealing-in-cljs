@@ -19,22 +19,29 @@
        (map u/make-lines) ;; [[lines]]
        (flatten)));; [lines]
 
+(defn draw-lines [lines-seq]
+  (doseq [{x1 :x1 y1 :y1
+           x2 :x2 y2 :y2
+           color :color} lines-seq]
+    (apply q/stroke color)
+    (q/line x1 y1 x2 y2)))
+
 (defn draw-skeleton []
   (do
     (q/background 255)
-    (q/stroke 0 255 0)
-    (let [line-list (->> (map u/make-lines d/polygon-list)
-                         (flatten))]
-      (doseq [{x1 :x1 y1 :y1 x2 :x2 y2 :y2} line-list]
-        (q/line x1 y1 x2 y2)))))
+    (let [line-list
+          (->> (map u/make-lines d/polygon-list)
+               (flatten))
+          colored-line-list
+          (map #(u/line-color % 0 255 0) line-list)]
+      (draw-lines colored-line-list))))
 
 (defn draw-triangulated-state []
   (do
     (q/background 255)
     (q/fill 0)
-    (doseq [ {x1 :x1 y1 :y1 x2 :x2 y2 :y2}
-            (triangulate-polyon-list d/polygon-list)]
-      (q/line x1 y1 x2 y2))))
+    (draw-lines (->> (triangulate-polyon-list d/polygon-list)
+                     (map #(u/line-color % 0 0 0))))))
 
 (defn draw-clipped-state []
   (do
@@ -43,14 +50,11 @@
                             (apply concat)  ;; [Polygon])
                             (u/slice-x 300))
           left_ (flatten (map u/make-lines left))
-          right_ (flatten (map u/make-lines right))]
-      (do
-        (q/stroke 255 0 0)
-        (doseq [{x1 :x1 y1 :y1 x2 :x2 y2 :y2} left_]
-          (q/line x1 y1 x2 y2))
-        (q/stroke 0 0 255)
-        (doseq [{x1 :x1 y1 :y1 x2 :x2 y2 :y2} right_]
-          (q/line x1 y1 x2 y2))))))
+          right_ (flatten (map u/make-lines right))
+          red (map #(u/line-color % 255 0 0) left_)
+          blue (map #(u/line-color % 0 0 255) right_)]
+      (doseq [color-list [red blue]]
+        (draw-lines color-list)))))
 
 (defonce state-draw
   {:skeleton draw-skeleton
