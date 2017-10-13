@@ -9,7 +9,8 @@
   :dependencies [[org.clojure/clojure "1.9.0-alpha17"]
                  [org.clojure/clojurescript "1.9.908"]
                  [org.clojure/core.async  "0.3.443"]
-                 [quil "2.6.0"]]
+                 [quil "2.6.0"]
+                 [prismatic/dommy "1.1.0"]]
 
   :plugins [[lein-figwheel "0.5.13"]
             [lein-doo "0.1.7"]
@@ -17,7 +18,9 @@
 
   :source-paths ["src"]
 
-  :cljsbuild {:builds
+  :cljsbuild {
+              :test-commands {"test" ["lein" "doo" "phantom" "test" "once"]}
+              :builds
               [{:id "dev"
                 :source-paths ["src"]
 
@@ -50,11 +53,10 @@
                            :pretty-print false}}
                {:id "test"
                 :source-paths ["src" "tests"]
-                :compiler {:output-to "resources/public/js/compiled/tests.js"
-                           :main runners.runner
+                :compiler {:output-to     "out/testable.js"
+                           :main          runners.runner
                            :optimizations :none
-                           :pretty-print true
-                           :output-dir "resources/public/js/compiled/tests"
+                           :output-dir "resources/public/js/compiled/test"
                            }}]}
 
   :figwheel {;; :http-server-root "public" ;; default and assumes "resources"

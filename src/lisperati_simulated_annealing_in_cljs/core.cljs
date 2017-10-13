@@ -1,7 +1,9 @@
 (ns lisperati-simulated-annealing-in-cljs.core
     (:require [quil.core :as q :include-macros true]
               [lisperati-simulated-annealing-in-cljs.data :as d]
-              [lisperati-simulated-annealing-in-cljs.utils :as u]))
+              [lisperati-simulated-annealing-in-cljs.utils :as u]
+              [dommy.core :as dom :refer-macros [sel1]]))
+
 
 (enable-console-print!)
 
@@ -68,4 +70,14 @@
       :setup setup
       :draw draw
       :host "chicken"
-      :size [700 700])
+      :size [700 500])
+
+(defn click-handler [state]
+  (fn [] (swap! app-state assoc :state state)))
+
+(doseq [state (keys state-draw)]
+  (let [id (->> (name state)
+                (str "#")
+                (keyword))]
+    (dom/listen! (sel1 id) :click (click-handler state))))
+
